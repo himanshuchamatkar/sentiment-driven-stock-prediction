@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AI Analysis — Hybrid Signals</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+  :root { --bg:#071018; --card:#0b1a22; --muted:#9aa9b3; --neon:#00ffa3; --danger:#ff6b6b; }
+  body { background: linear-gradient(180deg,#041017,#071018); color:#d8eef0; font-family: Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial; }
+  .glass { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); box-shadow:0 6px 24px rgba(2,6,23,0.6); }
+  .neon { color:var(--neon); } .muted { color:var(--muted); } .danger { color:var(--danger); }
+  .mini-candle { width:100%; height:48px; display:block; }
+</style>
+</head>
+<body class="min-h-screen p-6">
+
+<div class="max-w-6xl mx-auto">
+  <header class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-extrabold neon">AI Analysis — Hybrid Signals</h1>
+      <p class="muted">Symbol-level actionable analysis, SL/TP, R:R, explanation and confidence.</p>
+    </div>
+    <div class="flex items-center space-x-3">
+      <label class="muted text-sm">Timeframe</label>
+      <select id="timeframe" class="px-3 py-2 rounded bg-slate-900 text-sm">
+        <option value="INTRADAY">Intraday</option>
+        <option value="SWING" selected>Swing (default)</option>
+        <option value="POSITIONAL">Positional</option>
+      </select>
+    </div>
+  </header>
+
+  <form id="search-form" class="mb-6 grid grid-cols-12 gap-4">
+    <input id="symbol-input" type="text" placeholder="e.g. RELIANCE, TCS, INFY" required
+           class="col-span-9 p-3 rounded glass outline-none text-lg uppercase" />
+    <button id="analyze-button" type="submit" class="col-span-3 p-3 rounded bg-gradient-to-r from-green-500 to-emerald-400 text-black font-bold">
+      Analyze
+    </button>
+  </form>
+
+  <main id="results-container" class="space-y-6"></main>
+
+  <footer class="mt-10 text-sm muted">Server must be running at <code class="bg-slate-900 px-1 py-0.5 rounded">http://127.0.0.1:5000</code></footer>
+</div>
+
+<script>
+const API_URL = 'http://127.0.0.1:5000/analyze';
+const resultsContainer = document.getElementById('results-container');
+const symbolInput = document.getElementById('symbol-input');
+const analyzeButton = document.getElementById('analyze-button');
+const timeframeSelect = document.getElementById('timeframe');
+const form = document.getElementById('search-form');
+
+function showLoading(){
+  resultsContainer.innerHTML = `<div class="p-6 glass rounded"><p class="muted">Running analysis…</p></div>`;
+  analyzeButton.disabled = true;
+}
+function showError(message){
+  resultsContainer.innerHTML = `<div class="p-4 rounded bg-red-900/40 border border-red-700"><strong class="danger">Error:</strong> <span class="muted"> ${message}</span></div>`;
+  analyzeButton.disabled = false;
+}
+function fmt(x){ return (Number(x)||0).toFixed(2); }
+
+function renderMiniCandle(series){
+  if(!series || !series.length) return `<div class="p-3 muted">no data</div>`;
+  const w=300, h=48, pad=4;
+  const prices=series.map(s=>s.c);
+  const minP=Math.min(...prices), maxP=Math.max(...prices);
+  const range=Math.max(1e-6, maxP-minP);
+  const step=(w-pad*2)/(series.length-1||1);
+  let path='';
+  series.forEach((s,i)=>{
+    const x=pad + i*step;
+    const y=pad + (1 - (s.c-minP)/range)*(h-pad*2);
+    path += (i===0?`M ${x} ${y}`:` L ${x} ${y}`);
+  });
+  return `<svg class="mini-candle" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="transparent"/><path d="${path}" stroke="#00ffa3" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>`;
+}
+
+function renderDashboard(payload){
+  const a = payload.analysis;
+  const series = payload.series || [];
+  resultsContainer.innerHTML = `
+    <div class="grid grid-cols-12 gap-4">
+      <div class="col-span-7 glass p-4 rounded">
+        <div class="flex items-start justify-between">
+          <div>
+            <h2 class="text-2xl font-bold neon">${a.symbol}</h2>
+            <p class="muted">${a.reason}</p>
+          </div>
+          <div class="text-right">
+            <div class="text-sm muted">Latest</div>
+            <div class="text-2xl font-extrabold neon">₹${fmt(a.latestPrice)}</div>
+            <div class="text-xs muted">Updated: ${new Date(a.latest_index).toLocaleString()}</div>
+          </div>
+        </div>
+
+        <div class="mt-4 grid grid-cols-3 gap-3">
+          <div class="p-3 rounded bg-slate-900/50"><div class="text-xs muted">Take Profit (TP)</div><div class="text-lg font-bold neon">₹${fmt(a.tp)}</div></div>
+          <div class="p-3 rounded bg-slate-900/50"><div class="text-xs muted">Stop Loss (SL)</div><div class="text-lg font-bold danger">₹${fmt(a.sl)}</div></div>
+          <div class="p-3 rounded bg-slate-900/50"><div class="text-xs muted">Risk : Reward</div><div class="text-lg font-bold">${fmt(a.rr)} : 1</div></div>
+        </div>
+
+        <div class="mt-4 grid grid-cols-4 gap-3 text-sm muted">
+          <div class="p-3 rounded bg-slate-900/30"><div class="text-xs">VWAP</div><div class="font-semibold">${fmt(a.vwap)}</div></div>
+          <div class="p-3 rounded bg-slate-900/30"><div class="text-xs">RSI</div><div class="font-semibold">${fmt(a.rsi)}</div></div>
+          <div class="p-3 rounded bg-slate-900/30"><div class="text-xs">Sentiment</div><div class="font-semibold">${(a.sentiment||0).toFixed(2)}</div></div>
+          <div class="p-3 rounded bg-slate-900/30"><div class="text-xs">Confidence</div><div class="font-semibold neon">${(a.model_confidence||0).toFixed(1)}%</div></div>
+        </div>
+
+        <div class="mt-4">
+          <div id="chart-wrap" class="w-full glass rounded p-3">
+            <canvas id="priceChart" height="260"></canvas>
+            <div id="chart-fallback" class="mt-2">${renderMiniCandle(series.slice(-20))}</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-span-5 glass p-4 rounded space-y-3">
+        <div class="p-3 rounded bg-slate-900/30">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-xs muted">Signal</div>
+              <div id="rec" class="text-2xl font-bold">${a.recommendation}</div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs muted">Risk</div><div class="font-semibold">${fmt(a.risk)}</div>
+              <div class="text-xs muted mt-1">Reward</div><div class="font-semibold">${fmt(a.reward)}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded bg-slate-900/30">
+          <h3 class="text-sm muted mb-2">Explanation</h3>
+          <div id="explanation" class="text-sm" style="white-space:pre-wrap">${a.explanation || a.sltp_explanation}</div>
+        </div>
+
+        <div class="p-3 rounded bg-slate-900/30">
+          <h3 class="text-sm muted mb-2">SL/TP Details</h3>
+          <div id="sltp_expl" class="text-sm">${a.sltp_explanation || ''}</div>
+        </div>
+
+        <div class="p-3 rounded bg-slate-900/30">
+          <h3 class="text-sm muted mb-2">Pivots</h3>
+          <div class="grid grid-cols-2 gap-2 text-sm">
+            ${Object.entries(a.pivots || {}).map(([k,v]) => `<div class="p-2 bg-slate-800/30 rounded"><div class="muted text-xs">${k}</div><div class="font-semibold">${fmt(v)}</div></div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  try {
+    const ctx = document.getElementById('priceChart').getContext('2d');
+    const labels = series.map(s => new Date(s.t).toLocaleTimeString());
+    const closes = series.map(s => s.c);
+    const ema = payload.ema50 || [];
+    const vwap = payload.vwap_series || [];
+    if(window._priceChart){ try{ window._priceChart.destroy(); }catch(e){} }
+    window._priceChart = new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets:[
+        { label:'Close', data: closes, borderColor:'#00ffa3', backgroundColor:'rgba(0,255,163,0.02)', pointRadius:0, tension:0.12 },
+        { label:'EMA50', data: ema, borderColor:'#4ade80', borderDash:[6,4], pointRadius:0, tension:0.12 },
+        { label:'VWAP', data: vwap, borderColor:'#60a5fa', pointRadius:0, tension:0.12 }
+      ]},
+      options: {
+        plugins: { legend:{ labels:{ color:'#cfeff0' } } },
+        scales: { x:{ ticks:{ color:'#9fbfc4' } }, y:{ ticks:{ color:'#9fbfc4' } } },
+        interaction:{ mode:'index', intersect:false }, maintainAspectRatio:false
+      }
+    });
+    document.getElementById('chart-fallback').style.display = 'none';
+  } catch (err) {
+    console.warn("Chart render failed:", err);
+    document.getElementById('chart-fallback').style.display = 'block';
+  } finally {
+    analyzeButton.disabled = false;
+  }
+}
+
+async function analyzeStock(event){
+  event.preventDefault();
+  const symbol = symbolInput.value.trim().toUpperCase();
+  if(!symbol) return;
+  showLoading();
+  const timeframe = timeframeSelect.value || 'SWING';
+  try {
+    const resp = await fetch(API_URL, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ symbol, timeframe })
+    });
+    let payload;
+    try { payload = await resp.json(); } catch(e){ const txt = await resp.text(); throw new Error('Non-JSON response: '+txt); }
+    if(!resp.ok || payload.status === 'error'){
+      const serverMsg = payload && (payload.message || (payload.analysis && payload.analysis.reason));
+      throw new Error(serverMsg || `API error (status ${resp.status})`);
+    }
+    const body = { analysis: payload.analysis, series: payload.series, ema50: payload.ema50, vwap_series: payload.vwap_series, signals: payload.signals };
+    renderDashboard(body);
+  } catch (err) {
+    console.error("Analyze failed:", err);
+    showError(err.message || 'Could not get analysis. Ensure API is running on port 5000 and reachable.');
+  }
+}
+
+form.addEventListener('submit', analyzeStock);
+lucide.createIcons();
+</script>
+</body>
+</html>

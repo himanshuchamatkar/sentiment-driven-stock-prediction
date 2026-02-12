@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#16213e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f3460;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#1a1a2e;stop-opacity:0.9" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00ffa3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4ade80;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="800" fill="url(#bgGrad)"/>
+  
+  <!-- Title -->
+  <text x="600" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#00ffa3" filter="url(#glow)">
+    Stock AI Prediction System - High-Level Architecture
+  </text>
+  <text x="600" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#9aa9b3">
+    Hybrid Framework: Technical Analysis + Smart Money Concepts + AI Sentiment
+  </text>
+
+  <!-- DATA LAYER -->
+  <g id="data-layer" transform="translate(50, 120)">
+    <rect x="0" y="0" width="320" height="520" rx="15" fill="url(#cardGrad)" stroke="#00ffa3" stroke-width="2" filter="url(#shadow)"/>
+    <text x="160" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#00ffa3">DATA LAYER</text>
+    <line x1="20" y1="50" x2="300" y2="50" stroke="#00ffa3" stroke-width="1" opacity="0.5"/>
+    
+    <!-- Upstox API -->
+    <rect x="20" y="70" width="280" height="80" rx="10" fill="#1a1a2e" stroke="#4ade80" stroke-width="1"/>
+    <text x="160" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#4ade80">Upstox API</text>
+    <text x="160" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Real-time OHLCV Data</text>
+    <text x="160" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• OAuth 2.0 Authentication</text>
+    <text x="160" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Live Market Quotes</text>
+    
+    <!-- yfinance -->
+    <rect x="20" y="165" width="280" height="80" rx="10" fill="#1a1a2e" stroke="#60a5fa" stroke-width="1"/>
+    <text x="160" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#60a5fa">yfinance</text>
+    <text x="160" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Historical Daily Data</text>
+    <text x="160" y="225" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• 5-Year Lookback</text>
+    <text x="160" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Fallback Data Source</text>
+    
+    <!-- NewsAPI -->
+    <rect x="20" y="260" width="280" height="80" rx="10" fill="#1a1a2e" stroke="#f472b6" stroke-width="1"/>
+    <text x="160" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#f472b6">NewsAPI</text>
+    <text x="160" y="305" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Real-time News Feed</text>
+    <text x="160" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Keyword Filtering</text>
+    <text x="160" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Company Mentions</text>
+    
+    <!-- Instrument Master -->
+    <rect x="20" y="355" width="280" height="80" rx="10" fill="#1a1a2e" stroke="#fbbf24" stroke-width="1"/>
+    <text x="160" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fbbf24">NSE.csv.gz</text>
+    <text x="160" y="400" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• 2000+ NSE Equity Symbols</text>
+    <text x="160" y="415" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Instrument Key Mapping</text>
+    <text x="160" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• GZIP Compressed</text>
+    
+    <!-- Fallback Keys -->
+    <rect x="20" y="450" width="280" height="55" rx="10" fill="#1a1a2e" stroke="#a78bfa" stroke-width="1"/>
+    <text x="160" y="475" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#a78bfa">Fallback Keys</text>
+    <text x="160" y="495" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">RELIANCE, TCS, HDFCBANK, INFY...</text>
+  </g>
+
+  <!-- PROCESSING LAYER -->
+  <g id="processing-layer" transform="translate(420, 120)">
+    <rect x="0" y="0" width="360" height="520" rx="15" fill="url(#cardGrad)" stroke="#00ffa3" stroke-width="2" filter="url(#shadow)"/>
+    <text x="180" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#00ffa3">PROCESSING LAYER</text>
+    <line x1="20" y1="50" x2="340" y2="50" stroke="#00ffa3" stroke-width="1" opacity="0.5"/>
+    
+    <!-- Technical Indicators -->
+    <rect x="20" y="70" width="320" height="90" rx="10" fill="#1a1a2e" stroke="#4ade80" stroke-width="1"/>
+    <text x="180" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#4ade80">Technical Indicators (pandas-ta)</text>
+    <text x="100" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9aa9b3">RSI (14)</text>
+    <text x="180" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9aa9b3">EMA 20/50</text>
+    <text x="260" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9aa9b3">ATR (14)</text>
+    <text x="100" y="135" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9aa9b3">VWAP</text>
+    <text x="180" y="135" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9aa9b3">MACD</text>
+    <text x="260" y="135" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9aa9b3">Bollinger</text>
+    <text x="180" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9aa9b3">Classic Pivot Points (PP, R1, R2, S1, S2)</text>
+    
+    <!-- SMC Engine -->
+    <rect x="20" y="175" width="320" height="90" rx="10" fill="#1a1a2e" stroke="#f472b6" stroke-width="1"/>
+    <text x="180" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#f472b6">SMC Engine</text>
+    <text x="180" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Fair Value Gap (FVG) Detection</text>
+    <text x="180" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Order Block (OB) Identification</text>
+    <text x="180" y="260" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Institutional Pattern Recognition</text>
+    
+    <!-- Sentiment Analysis -->
+    <rect x="20" y="280" width="320" height="100" rx="10" fill="#1a1a2e" stroke="#60a5fa" stroke-width="1"/>
+    <text x="180" y="305" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#60a5fa">Sentiment Analysis Pipeline</text>
+    <text x="180" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">Priority 1: FinBERT Transformer</text>
+    <text x="180" y="345" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">Priority 2: VADER Lexicon</text>
+    <text x="180" y="365" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">Score Range: [-1.0, +1.0]</text>
+    
+    <!-- Decision Engine -->
+    <rect x="20" y="395" width="320" height="110" rx="10" fill="#1a1a2e" stroke="#fbbf24" stroke-width="1"/>
+    <text x="180" y="420" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fbbf24">Decision Engine</text>
+    <text x="180" y="445" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Signal Confluence Analysis</text>
+    <text x="180" y="465" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Adaptive SL/TP Calculation</text>
+    <text x="180" y="485" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Timeframe-Aware Risk Management</text>
+    <text x="180" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#4ade80">(INTRADAY | SWING | POSITIONAL)</text>
+  </g>
+
+  <!-- PRESENTATION LAYER -->
+  <g id="presentation-layer" transform="translate(830, 120)">
+    <rect x="0" y="0" width="320" height="520" rx="15" fill="url(#cardGrad)" stroke="#00ffa3" stroke-width="2" filter="url(#shadow)"/>
+    <text x="160" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#00ffa3">PRESENTATION LAYER</text>
+    <line x1="20" y1="50" x2="300" y2="50" stroke="#00ffa3" stroke-width="1" opacity="0.5"/>
+    
+    <!-- Flask REST API -->
+    <rect x="20" y="70" width="280" height="100" rx="10" fill="#1a1a2e" stroke="#4ade80" stroke-width="1"/>
+    <text x="160" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#4ade80">Flask REST API</text>
+    <text x="160" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">POST /analyze</text>
+    <text x="160" y="135" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">POST /backtest</text>
+    <text x="160" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">GET / (Dashboard)</text>
+    
+    <!-- JavaScript Frontend -->
+    <rect x="20" y="185" width="280" height="100" rx="10" fill="#1a1a2e" stroke="#60a5fa" stroke-width="1"/>
+    <text x="160" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#60a5fa">JavaScript Frontend</text>
+    <text x="160" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Tailwind CSS Styling</text>
+    <text x="160" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Chart.js Visualization</text>
+    <text x="160" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Lucide Icons</text>
+    
+    <!-- Real-time Dashboard -->
+    <rect x="20" y="300" width="280" height="110" rx="10" fill="#1a1a2e" stroke="#f472b6" stroke-width="1"/>
+    <text x="160" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#f472b6">Interactive Dashboard</text>
+    <text x="160" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Symbol Search Input</text>
+    <text x="160" y="370" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Timeframe Selection</text>
+    <text x="160" y="390" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Real-time Price Charts</text>
+    <text x="160" y="405" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• SL/TP Visualization</text>
+    
+    <!-- Explainable Output -->
+    <rect x="20" y="425" width="280" height="80" rx="10" fill="#1a1a2e" stroke="#fbbf24" stroke-width="1"/>
+    <text x="160" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fbbf24">Explainable AI Output</text>
+    <text x="160" y="475" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Trading Recommendation</text>
+    <text x="160" y="495" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9aa9b3">• Detailed Reasoning</text>
+  </g>
+
+  <!-- Arrows -->
+  <g id="arrows" stroke="#00ffa3" stroke-width="2" fill="none">
+    <!-- Data to Processing -->
+    <path d="M 370,380 L 420,380" marker-end="url(#arrowhead)"/>
+    
+    <!-- Processing to Presentation -->
+    <path d="M 780,380 L 830,380" marker-end="url(#arrowhead)"/>
+  </g>
+  
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#00ffa3"/>
+    </marker>
+  </defs>
+
+  <!-- Legend -->
+  <g id="legend" transform="translate(50, 680)">
+    <rect x="0" y="0" width="1100" height="80" rx="10" fill="#1a1a2e" stroke="#00ffa3" stroke-width="1" opacity="0.5"/>
+    <text x="550" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#00ffa3">Technology Stack</text>
+    
+    <text x="100" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#4ade80">Python 3.9+</text>
+    <text x="220" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#60a5fa">Flask 2.0+</text>
+    <text x="340" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#f472b6">pandas-ta</text>
+    <text x="460" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#fbbf24">transformers</text>
+    <text x="580" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#a78bfa">yfinance</text>
+    <text x="700" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#4ade80">NLTK</text>
+    <text x="820" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#60a5fa">Chart.js</text>
+    <text x="940" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#f472b6">Tailwind CSS</text>
+    <text x="1040" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#fbbf24">vectorbt</text>
+    
+    <text x="100" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9aa9b3">(Backend)</text>
+    <text x="220" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9aa9b3">(API)</text>
+    <text x="340" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9aa9b3">(Indicators)</text>
+    <text x="460" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9aa9b3">(FinBERT)</text>
+    <text x="580" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9aa9b3">(Data)</text>
+    <text x="700" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9aa9b3">(VADER)</text>
+    <text x="820" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9aa9b3">(Charts)</text>
+    <text x="940" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9aa9b3">(Styling)</text>
+    <text x="1040" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9aa9b3">(Backtest)</text>
+  </g>
+</svg>

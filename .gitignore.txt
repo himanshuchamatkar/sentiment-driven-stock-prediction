@@ -1,0 +1,9 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+token.txt
+config/*.py
+NSE.csv.gz
+Research_Paper/
+stock project details/
